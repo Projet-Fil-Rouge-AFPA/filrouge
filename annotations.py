@@ -2,15 +2,44 @@ import numpy as np
 import pandas as pd
 
 def generate_sequences_boundaries(response8_start_time_in_seconds):
+    """ Generates the video sequence boundaries
+
+    Args:
+        response8_start_time_in_seconds ([int]): start time of response 8
+
+    Returns:
+        [int]: list of sequence start times
+    """
+
     sequences_limits = np.array([-10, 40, 139, 206, 302, 362, 415, 448, 477, 520, 560, 593])
     sequences_limits = sequences_limits + response8_start_time_in_seconds
     return list(sequences_limits)
 
 def convert_start_time(start_time_string):
+    """ Convert the start time format in the Google sheet in seconds
+
+    Args:
+        start_time_string ([string]): start time in format MM.SS
+
+    Returns:
+        int: start time in seconds
+    """
+
     minutes, seconds = map(int,start_time_string.split('.'))
     return 60 * minutes + seconds
 
 def get_annotations_video(filename_annotations, video_name):
+    """ Get the annotations from the Google sheet file
+        - response 8 start time
+        - stress scores
+
+    Args:
+        filename_annotations ([type]): [description]
+        video_name ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     df_annotations = pd.read_csv(filename_annotations,  header=None).drop([0, 1, 2, 3])
     # video_name = 'WIN_20210406_18_35_52_Pro'
     response8_start_time = df_annotations[df_annotations.iloc[:,1] == video_name].iloc[0,3]
@@ -29,7 +58,17 @@ def get_annotations_video(filename_annotations, video_name):
     return response8_start_time, stress_annotations
 
 def add_video_annotations(df_features, filename_annotations, time_column_index, video_name):
-    
+    """ Add annotations information to the DataFrame of features
+
+    Args:
+        df_features ([pandas.DataFrame]): features
+        filename_annotations ([string]): path of the annotations file
+        time_column_index ([int]): index of the time column of the DataFrame
+        video_name ([string]): name of the video to be recorded in the DataFrame
+
+    Returns:
+        pandas.DataFrame: DataFrame of features with annotations
+    """
     diapos = [1,8,9,10,11,12,15,16,17,18,19,20,21] # hardcoded
     
     response8_start_time, stress_annotations = get_annotations_video(filename_annotations, video_name)
