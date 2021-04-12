@@ -41,16 +41,20 @@ def get_annotations_video(filename_annotations, video_name):
         [type]: [description]
     """
     df_annotations = pd.read_csv(filename_annotations,  header=None).drop([0, 1, 2, 3])
-    # video_name = 'WIN_20210406_18_35_52_Pro'
-    response8_start_time = df_annotations[df_annotations.iloc[:,1] == video_name].iloc[0,3]
-    stress = df_annotations[df_annotations.iloc[:,1] == video_name].iloc[0,4:18]
-    # we take the first line of the annotations
-    # this can be changed
-    response8_start_time = df_annotations[df_annotations.iloc[:,1] == video_name].iloc[0,3]
-    stress_annotations = df_annotations[df_annotations.iloc[:,1] == video_name].iloc[0,4:18]
 
-    if (len(response8_start_time) == 0) :
-        return False # the video_name was not found
+    try:
+        # we take the first line of the annotations
+        # this can be changed
+        response8_start_time = df_annotations[df_annotations.iloc[:,1] == video_name].iloc[0,3]
+        stress_annotations = df_annotations[df_annotations.iloc[:,1] == video_name].iloc[0,4:18]
+    except IndexError as ex:
+        print("Video name is not found in the annotation file", video_name, filename_annotations)
+        return '', '' # the video_name was not found
+
+    if (pd.isna(response8_start_time)) or (stress_annotations.isna().any()) :
+        print("The video was not found in the annotation file or is not fully annotated ", 
+                filename_annotations, video_name)
+        return '', '' # the video_name was not found
 
     response8_start_time = convert_start_time(response8_start_time)
     stress_annotations = [int(stress) for stress in stress_annotations]
@@ -68,10 +72,14 @@ def add_video_annotations(df_features, filename_annotations, time_column_index, 
 
     Returns:
         pandas.DataFrame: DataFrame of features with annotations
+                          The DataFrame is empty if annotations were not found
     """
     diapos = [1,8,9,10,11,12,15,16,17,18,19,20,21] # hardcoded
     
     response8_start_time, stress_annotations = get_annotations_video(filename_annotations, video_name)
+    if response8_start_time == '': 
+        # the video was not found
+        return pd.DataFrame()
 
     df = df_features.copy()
     df['video_name'] = video_name
