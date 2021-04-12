@@ -1,6 +1,7 @@
 import os
 import subprocess
 import platform
+import pandas as pd
 
 def extract_video_features(OpenFace_directory, Video_path):
     '''
@@ -28,3 +29,17 @@ def extract_video_features(OpenFace_directory, Video_path):
         cmd = f"FeatureExtraction -f {Video_path} -2Dfp -3Dfp -pdmparams -pose -aus -gaze"
         
     return subprocess.run(cmd, shell=True, text=True, capture_output=True)
+
+def create_dataframe_video(OpenFace_processed_path, Name_csv):
+    '''
+    Create a dataframe from csv extracted with OpenFace
+    
+    Parameters
+    ----------
+    OpenFace_processed_path: String
+    Path for the directory processed of OpenFace (e.g '/Users/OpenFace/processed/')
+    
+    Name_csv : String
+    Name of the csv (e.g. 'Video1.csv')
+    '''
+    return pd.read_csv(OpenFace_processed_path+Name_csv)
