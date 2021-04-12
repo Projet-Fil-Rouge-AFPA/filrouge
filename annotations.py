@@ -5,7 +5,7 @@ def generate_sequences_boundaries(response8_start_time_in_seconds):
     """ Generates the video sequence boundaries
 
     Args:
-        response8_start_time_in_seconds ([int]): start time of response 8
+        response8_start_time_in_seconds (int): start time of response 8
 
     Returns:
         [int]: list of sequence start times
@@ -19,7 +19,7 @@ def convert_start_time(start_time_string):
     """ Convert the start time format in the Google sheet in seconds
 
     Args:
-        start_time_string ([string]): start time in format MM.SS
+        start_time_string (string): start time in format MM.SS
 
     Returns:
         int: start time in seconds
@@ -34,11 +34,12 @@ def get_annotations_video(filename_annotations, video_name):
         - stress scores
 
     Args:
-        filename_annotations ([type]): [description]
-        video_name ([type]): [description]
+        filename_annotations (string): path of the video annotation file
+        video_name (string): name of the video
 
     Returns:
-        [type]: [description]
+        response8_start_time (int): start time of response 8 ('' if the video name is not found)
+        stress_annotations ([int]): stress scores ('' if the video name is not found)
     """
     df_annotations = pd.read_csv(filename_annotations,  header=None).drop([0, 1, 2, 3])
 
@@ -65,10 +66,10 @@ def add_video_annotations(df_features, filename_annotations, time_column_index, 
     """ Add annotations information to the DataFrame of features
 
     Args:
-        df_features ([pandas.DataFrame]): features
-        filename_annotations ([string]): path of the annotations file
+        df_features (pandas.DataFrame): features
+        filename_annotations (string): path of the annotations file
         time_column_index ([int]): index of the time column of the DataFrame
-        video_name ([string]): name of the video to be recorded in the DataFrame
+        video_name (string): name of the video to be recorded in the DataFrame
 
     Returns:
         pandas.DataFrame: DataFrame of features with annotations
