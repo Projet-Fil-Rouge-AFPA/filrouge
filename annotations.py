@@ -35,7 +35,7 @@ def get_annotations_video(filename_annotations, video_name):
 
     Args:
         filename_annotations (string): path of the video annotation file
-        video_name (string): name of the video
+        video_name (string): name of the video (e.g "Video_1")
 
     Returns:
         response8_start_time (int): start time of response 8 ('' if the video name is not found)
