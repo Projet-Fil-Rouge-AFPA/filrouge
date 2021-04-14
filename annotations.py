@@ -51,9 +51,13 @@ def get_annotations_video(filename_annotations, video_name, operator='first'):
         response8_start_time = df_annotations_video.iloc[0,3]
         response8_start_time = convert_start_time(response8_start_time)
 
+        # Get Q17 start time
+        response17_start_time = df_annotations_video.iloc[0,4]
+        response17_start_time = convert_start_time(response17_start_time)
+
         # Load annotations as array of float
-        stress_annotations_1 = np.array(df_annotations_video.iloc[0,4:18].astype(float))
-        stress_annotations_2 = np.array(df_annotations_video.iloc[1,4:18].astype(float))
+        stress_annotations_1 = np.array(df_annotations_video.iloc[0,4:18].astype(float)) #hardcoded
+        stress_annotations_2 = np.array(df_annotations_video.iloc[1,4:18].astype(float)) #hardcoded
 
         # Aggregate annotation
         if operator == 'first':
@@ -95,6 +99,8 @@ def add_video_annotations(df_features, filename_annotations, time_column_index, 
         pandas.DataFrame: DataFrame of features with annotations
                           The DataFrame is empty if annotations were not found
     """
+
+    #A CHANGER
     diapos = [1,8,9,10,11,12,15,16,17,18,19,20,21] # hardcoded
     
     response8_start_time, stress_annotations = get_annotations_video(filename_annotations, video_name)
