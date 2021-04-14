@@ -2,6 +2,7 @@ import os
 import subprocess
 import platform
 import pandas as pd
+import annotations
 
 def extract_video_features(OpenFace_directory, Video_path):
     '''
@@ -43,3 +44,24 @@ def create_dataframe_video(OpenFace_processed_path, Name_csv):
     Name of the csv (e.g. 'Video1.csv')
     '''
     return pd.read_csv(OpenFace_processed_path+Name_csv)
+
+def get_df_video_with_annotations(OpenFace_processed_path, Name_csv, Annotations_path):
+    '''
+    Create a dataframe with annotations from csv extracted with OpenFace
+    
+    Parameters
+    ----------
+    OpenFace_processed_path: String
+    Path for the directory processed of OpenFace (e.g '/Users/OpenFace/processed/')
+    
+    Name_csv : String
+    Name of the csv (e.g. 'Video1.csv')
+
+    AnnotationPath: String
+    Path for the csv with annotations(e.g ''/Users/video_stress/Videos_Annotations - Template.csv'')
+    '''
+    column_timestamp = 2
+    Name_video = Name_csv[:-4]
+    df_video = create_dataframe_video(OpenFace_processed_path, Name_csv)
+    return add_video_annotations(df_video1, Annotations_path, column_timestamp, Name_video)    
+
