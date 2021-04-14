@@ -2,7 +2,7 @@ import os
 import subprocess
 import platform
 import pandas as pd
-import annotations
+from annotations import add_video_annotations
 
 def extract_video_features(OpenFace_directory, Video_path):
     '''
