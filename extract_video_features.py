@@ -63,5 +63,5 @@ def get_df_video_with_annotations(OpenFace_processed_path, Name_csv, Annotations
     column_timestamp = 2
     Name_video = Name_csv[:-4]
     df_video = create_dataframe_video(OpenFace_processed_path, Name_csv)
-    return add_video_annotations(df_video1, Annotations_path, column_timestamp, Name_video)    
+    return add_video_annotations(df_video, Annotations_path, column_timestamp, Name_video)    
 
