@@ -56,7 +56,6 @@ def get_annotations_video(filename_annotations, video_name, operator='first'):
         stress_annotations_2 = np.array(df_annotations_video.iloc[1,4:18].astype(float))
 
         # Aggregate annotation
-        stress_annotations = stress_annotations_1
         if operator == 'first':
             stress_annotations = stress_annotations_1
         elif operator == 'mean':
