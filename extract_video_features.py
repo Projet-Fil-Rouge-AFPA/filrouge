@@ -43,7 +43,14 @@ def create_dataframe_video(OpenFace_processed_path, Name_video):
     Name_video : String
     Name of the video (e.g. 'Video1')
     '''
-    return pd.read_csv(OpenFace_processed_path+Name_video+'.csv')
+    df = pd.read_csv(OpenFace_processed_path+Name_video+'.csv') 
+    #rename the column erasing the space in the name of each column
+    l=[]
+    for i in df.columns:
+        l.append(i.replace(" ", ""))  
+    df.columns =l   
+    return df
+    
 
 def get_df_video_with_annotations(OpenFace_processed_path, Name_video, Annotations_path):
     '''
