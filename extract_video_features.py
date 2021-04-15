@@ -74,7 +74,7 @@ def get_df_video_with_annotations(OpenFace_processed_path, Name_video, Annotatio
 def check_success(df):
    
     '''
-    Gives the percentage of the dataframes in which OpenFace succeeded in the detection a face 
+    Gives the percentage of the frames in which OpenFace succeeded in the detection a face 
     
     Parameters
     ----------
