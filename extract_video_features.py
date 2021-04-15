@@ -71,4 +71,14 @@ def get_df_video_with_annotations(OpenFace_processed_path, Name_video, Annotatio
     
     df_video = create_dataframe_video(OpenFace_processed_path, Name_video)
     return add_video_annotations(df_video, Annotations_path, column_timestamp, Name_video)     
-
+def check_success(df):
+   
+    '''
+    Gives the percentage of the dataframes in which OpenFace succeeded in the detection a face 
+    
+    Parameters
+    ----------
+    df: Dataframe
+    Name of the dataframe 
+    '''
+    return df["success"].value_counts()[1]*100/df.shape[0]
