@@ -31,7 +31,7 @@ def extract_video_features(OpenFace_directory, Video_path):
         
     return subprocess.run(cmd, shell=True, text=True, capture_output=True)
 
-def create_dataframe_video(OpenFace_processed_path, Name_csv):
+def create_dataframe_video(OpenFace_processed_path, Name_video):
     '''
     Create a dataframe from csv extracted with OpenFace
     
@@ -41,11 +41,11 @@ def create_dataframe_video(OpenFace_processed_path, Name_csv):
     Path for the directory processed of OpenFace (e.g '/Users/OpenFace/processed/')
     
     Name_csv : String
-    Name of the csv (e.g. 'Video1.csv')
+    Name of the video (e.g. 'Video1')
     '''
-    return pd.read_csv(OpenFace_processed_path+Name_csv)
+    return pd.read_csv(OpenFace_processed_path+Name_video+'.csv')
 
-def get_df_video_with_annotations(OpenFace_processed_path, Name_csv, Annotations_path):
+def get_df_video_with_annotations(OpenFace_processed_path, Name_video, Annotations_path):
     '''
     Create a dataframe with annotations from csv extracted with OpenFace
     
@@ -55,13 +55,13 @@ def get_df_video_with_annotations(OpenFace_processed_path, Name_csv, Annotations
     Path for the directory processed of OpenFace (e.g '/Users/OpenFace/processed/')
     
     Name_csv : String
-    Name of the csv (e.g. 'Video1.csv')
+    Name of the video without csv (e.g. 'Video1')
 
     AnnotationPath: String
     Path for the csv with annotations(e.g ''/Users/video_stress/Videos_Annotations - Template.csv'')
     '''
     column_timestamp = 2
-    Name_video = Name_csv[:-4]
-    df_video = create_dataframe_video(OpenFace_processed_path, Name_csv)
-    return add_video_annotations(df_video, Annotations_path, column_timestamp, Name_video)    
+    
+    df_video = create_dataframe_video(OpenFace_processed_path, Name_video)
+    return add_video_annotations(df_video, Annotations_path, column_timestamp, Name_video)     
 
