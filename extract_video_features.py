@@ -40,7 +40,7 @@ def create_dataframe_video(OpenFace_processed_path, Name_video):
     OpenFace_processed_path: String
     Path for the directory processed of OpenFace (e.g '/Users/OpenFace/processed/')
     
-    Name_csv : String
+    Name_video : String
     Name of the video (e.g. 'Video1')
     '''
     return pd.read_csv(OpenFace_processed_path+Name_video+'.csv')
@@ -54,7 +54,7 @@ def get_df_video_with_annotations(OpenFace_processed_path, Name_video, Annotatio
     OpenFace_processed_path: String
     Path for the directory processed of OpenFace (e.g '/Users/OpenFace/processed/')
     
-    Name_csv : String
+    Name_video : String
     Name of the video without csv (e.g. 'Video1')
 
     AnnotationPath: String
