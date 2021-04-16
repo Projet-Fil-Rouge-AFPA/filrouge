@@ -54,15 +54,11 @@ def get_annotations_video(filename_annotations, video_name, agreg_annotators):
 
     # Aggregate annotation of columns
     #For diapo 12-16
-    #Compute
-    #max
-    res = stress_annotations[5:8].max()
-    #Delete the cols
-    stress_annotations = np.delete(stress_annotations,[5,6,7])
-    #Replace by the aggregate
-    stress_annotations = np.insert(stress_annotations,5,res)
+    res = stress_annotations[5:8].max() #Compute max (can be changed)
+    stress_annotations = np.delete(stress_annotations,[5,6,7]) #Delete the cols
+    stress_annotations = np.insert(stress_annotations,5,res) #Replace by the aggregate
 
-    #For diapo 18-23
+    #Now we do the same for diapo 18-23
     res = stress_annotations[6:10].max()
     stress_annotations = np.delete(stress_annotations,[6,7,8,9])
     stress_annotations = np.insert(stress_annotations,7,res)
@@ -87,31 +83,19 @@ def add_video_annotations(df_features, filename_annotations, time_column_index, 
     """
 
     diapos = [1,8,9,10,11,12,17,18] # hardcoded
-    
-    response8_start_time, response17_start_time, stress_annotations = get_annotations_video(filename_annotations, video_name)
+    response8_start_time, response17_start_time, stress_annotations = get_annotations_video(filename_annotations, video_name,'max')
 
     df = df_features.copy()
     df['video_name'] = video_name
     df['stress_global'] = stress_annotations[-1]
     
-    #Time in sec of questions 1-8 / 9 / 10 / 11 / 12-16
-    sequences_limits_8 = np.array([-10, 40, 139, 206, 302])
-    sequences_limits_8 = list(sequences_limits_8 + response8_start_time)
-
-    #Time in sec of questions 17 / 18-23
-    sequences_limits_17 = np.array([448, 477, 593])
-    sequences_limits_17 = list(sequences_limits_17 + response17_start_time)
+    #Time in sec of questions 1-8 / 9 / 10 / 11 / 12-16 / 17 / 18-23
+    sequences_limits = np.array([-10+response8_start_time, 40+response8_start_time, 139+response8_start_time, 206+response8_start_time, 302+response8_start_time, response17_start_time, response17_start_time+29])
+    sequences_limits = list(sequences_limits)
 
     limit_1 = 0
     i = 0
-    for limit_2 in sequences_limits_8:
-        df.loc[(df.iloc[:,time_column_index] >= limit_1) & (df.iloc[:,time_column_index] < limit_2),['stress','diapo']] = [stress_annotations[i],diapos[i]]
-        limit_1 = limit_2
-        i += 1
-
-    limit_1 = 0
-    i = 0
-    for limit_2 in sequences_limits_17:
+    for limit_2 in sequences_limits:
         df.loc[(df.iloc[:,time_column_index] >= limit_1) & (df.iloc[:,time_column_index] < limit_2),['stress','diapo']] = [stress_annotations[i],diapos[i]]
         limit_1 = limit_2
         i += 1
