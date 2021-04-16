@@ -32,7 +32,6 @@ def get_annotations_video(filename_annotations, video_name, agreg_annotators):
     df_annotations = pd.read_csv(filename_annotations,  header=None).drop([0, 1, 2, 3])
     df_annotations_video = df_annotations[df_annotations.iloc[:,1] == video_name]
 
-
     # Get Q8 start time
     response8_start_time = str(df_annotations_video.iloc[0,3]).replace(",", ".")
     response8_start_time = convert_start_time(response8_start_time)
