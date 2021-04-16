@@ -18,7 +18,6 @@ def get_annotations_video(filename_annotations, video_name, agreg_annotators):
         - response 8 start time
         - response 17 start time
         - stress scores
-
     Args:
         filename_annotations (string): path of the video annotation file
         video_name (string): name of the video (e.g "Video_1")
