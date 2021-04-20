@@ -82,3 +82,19 @@ def check_success(df):
     Name of the dataframe 
     '''
     return df["success"].value_counts()[1]*100/df.shape[0]
+
+def eliminate_features(df):
+    '''
+    Takes a dataframe, as produced from the csv of OpenFace, 
+    and keeps only the features 'frame', 'face_id', 'timestamp', 'confidence', 'success',
+    and the fetures related to eye gaze, AU, and head movements.
+
+    Parameters
+    ----------
+    df: Dataframe
+    Name of the dataframe
+    '''
+    for i in df.columns:
+        if "eye" in i or "x_" in i or 'y_' in i or 'z_' in i or 'X_' in i or 'Y_' in i or 'Z_' in i or 'p_' in i:
+            del df[i]
+    return df    
