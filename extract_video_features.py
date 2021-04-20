@@ -87,7 +87,7 @@ def eliminate_features(df):
     '''
     Takes a dataframe, as produced from the csv of OpenFace, 
     and keeps only the features 'frame', 'face_id', 'timestamp', 'confidence', 'success',
-    and the fetures related to eye gaze, AU, and head movements.
+    and the features related to eye gaze, AU, and head movements.
 
     Parameters
     ----------
