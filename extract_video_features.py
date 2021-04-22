@@ -2,6 +2,7 @@ import os
 import subprocess
 import platform
 import pandas as pd
+import math
 from annotations import add_video_annotations
 
 def extract_video_features(OpenFace_directory, Video_path):
@@ -97,4 +98,19 @@ def eliminate_features(df):
     for i in df.columns:
         if "eye" in i or "x_" in i or 'y_' in i or 'z_' in i or 'X_' in i or 'Y_' in i or 'Z_' in i or 'p_' in i:
             del df[i]
-    return df    
+    return df 
+
+def total_distance_head(df):
+    """ Takes a datframe as produced from the csv of OpenFace, 
+    and returns the total distance in millimeters traveled by the head
+    during the video
+    Parameters
+    ----------
+    df: Dataframe
+    Name of the dataframe
+    """
+
+    dist=0
+    for i in range(df.shape[0]-1):
+        dist+=math.sqrt((df.loc[i, "pose_Tx"]-df.loc[i+1, "pose_Tx"])**2 +(df.loc[i, "pose_Ty"]-df.loc[i+1, "pose_Ty"])**2+(df.loc[i, "pose_Tz"]-df.loc[i+1, "pose_Tz"])**2 )
+    return dist        
