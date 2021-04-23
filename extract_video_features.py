@@ -53,7 +53,7 @@ def create_dataframe_video(OpenFace_processed_path, Name_video):
     return df
     
 
-def get_df_video_with_annotations(OpenFace_processed_path, Name_video, Annotations_path):
+def get_df_video_with_annotations(OpenFace_processed_path, Name_video, Annotations_path, aggreg):
     '''
     Create a dataframe with annotations from csv extracted with OpenFace
     
@@ -71,7 +71,7 @@ def get_df_video_with_annotations(OpenFace_processed_path, Name_video, Annotatio
     column_timestamp = 2
     
     df_video = create_dataframe_video(OpenFace_processed_path, Name_video)
-    return add_video_annotations(df_video, Annotations_path, column_timestamp, Name_video)     
+    return add_video_annotations(df_video, Annotations_path, column_timestamp, Name_video, aggreg)     
 def check_success(df):
    
     '''

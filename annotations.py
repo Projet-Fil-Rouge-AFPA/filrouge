@@ -75,7 +75,7 @@ def get_annotations_video(filename_annotations, video_name, agreg_annotators):
 
     return response8_start_time, response17_start_time, stress_annotations, type_candidat, sexe
 
-def add_video_annotations(df_features, filename_annotations, time_column_index, video_name):
+def add_video_annotations(df_features, filename_annotations, time_column_index, video_name, agreg_annotators):
     """ Add annotations information to the DataFrame of features
 
     Args:
@@ -90,7 +90,7 @@ def add_video_annotations(df_features, filename_annotations, time_column_index, 
     """
 
     diapos = [1,8,9,10,11,12,17,18] # hardcoded
-    response8_start_time, response17_start_time, stress_annotations, type_candidat, sexe = get_annotations_video(filename_annotations, video_name,'max')
+    response8_start_time, response17_start_time, stress_annotations, type_candidat, sexe = get_annotations_video(filename_annotations, video_name, agreg_annotators)
 
     df = df_features.copy()
     df['video_name'] = video_name
