@@ -4,6 +4,7 @@ import platform
 import pandas as pd
 import math
 from annotations import add_video_annotations
+from itertools import repeat
 
 def extract_video_features(OpenFace_directory, Video_path):
     '''
