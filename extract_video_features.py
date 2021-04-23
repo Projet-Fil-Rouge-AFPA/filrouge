@@ -118,7 +118,7 @@ def total_distance_head(df):
 
 def create_df_distances_head(df):
     """Takes a dataframe which has the column diapos and add a column "dist-head". 
-    This new column contains the distance travel by the head during a diapo, therefore
+    This new column contains the distance traveled by the head during a diapo, therefore
     it is a column which has a numer of values equal to the number of different diapos
 
     Parameters
