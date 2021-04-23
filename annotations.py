@@ -32,6 +32,12 @@ def get_annotations_video(filename_annotations, video_name, agreg_annotators):
     df_annotations = pd.read_csv(filename_annotations,  header=None).drop([0, 1, 2, 3])
     df_annotations_video = df_annotations[df_annotations.iloc[:,1] == video_name]
 
+    #Get participant type (formateur vs stagiaire)
+    type_candidat = str(df_annotations_video.iloc[0,19])
+
+    #Get sex (H/F)
+    sexe = str(df_annotations_video.iloc[0,20])
+
     # Get Q8 start time
     response8_start_time = str(df_annotations_video.iloc[0,3]).replace(",", ".")
     response8_start_time = convert_start_time(response8_start_time)
@@ -65,8 +71,9 @@ def get_annotations_video(filename_annotations, video_name, agreg_annotators):
 
     #Convert stress_annotations from np.array to list
     stress_annotations = stress_annotations.tolist()
+ 
 
-    return response8_start_time, response17_start_time, stress_annotations
+    return response8_start_time, response17_start_time, stress_annotations, type_candidat, sexe
 
 def add_video_annotations(df_features, filename_annotations, time_column_index, video_name):
     """ Add annotations information to the DataFrame of features
@@ -83,11 +90,13 @@ def add_video_annotations(df_features, filename_annotations, time_column_index, 
     """
 
     diapos = [1,8,9,10,11,12,17,18] # hardcoded
-    response8_start_time, response17_start_time, stress_annotations = get_annotations_video(filename_annotations, video_name,'max')
+    response8_start_time, response17_start_time, stress_annotations, type_candidat, sexe = get_annotations_video(filename_annotations, video_name,'max')
 
     df = df_features.copy()
     df['video_name'] = video_name
     df['stress_global'] = stress_annotations[-1]
+    df['type_candidat'] = type_candidat
+    df['sexe'] = sexe
     
     #Time in sec of questions 1-8 / 9 / 10 / 11 / 12-16 / 17 / 18-23
     sequences_limits = np.array([-10+response8_start_time, 40+response8_start_time, 139+response8_start_time, 206+response8_start_time, 302+response8_start_time, response17_start_time, response17_start_time+29])
