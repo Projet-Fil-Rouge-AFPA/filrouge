@@ -104,6 +104,7 @@ def total_distance_head(df):
     """ Takes a datframe as produced from the csv of OpenFace, 
     and returns the total distance in millimeters traveled by the head
     during the video
+    
     Parameters
     ----------
     df: Dataframe
@@ -114,5 +115,25 @@ def total_distance_head(df):
     for i in range(df.shape[0]-1):
         dist+= math.sqrt((df.loc[i, "pose_Tx"]-df.loc[i+1, "pose_Tx"])**2 +(df.loc[i, "pose_Ty"]-df.loc[i+1, "pose_Ty"])**2+(df.loc[i, "pose_Tz"]-df.loc[i+1, "pose_Tz"])**2 )
     return dist        
+
+def create_df_distances_head(df):
+    """Takes a dataframe which has the column diapos and add a column "dist-head". 
+    This new column contains the distance travel by the head during a diapo, therefore
+    it is a column which has a numer of values equal to the number of different diapos
+
+    Parameters
+    
+    """
+    L=[]
+    diapos = [1,8,9,10,11,12,17, 18]
+    for j in diapos:
+        lj=df.index[df['diapo'] == j].tolist()
+        distj=0
+        for i in lj[:-1]:
+            distj+= math.sqrt((df.loc[i, "pose_Tx"]-df.loc[i+1, "pose_Tx"])**2 +(df.loc[i, "pose_Ty"]-df.loc[i+1, "pose_Ty"])**2+(df.loc[i, "pose_Tz"]-df.loc[i+1, "pose_Tz"])**2 )
+        Lj = list(repeat(distj, len(lj))) 
+        L+=Lj
+    df["dist_head"]= L   
+    return df
 
 
