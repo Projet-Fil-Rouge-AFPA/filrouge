@@ -158,7 +158,7 @@ def create_df_distances_head(df):
         L+=Lj
     df["dist_head_total"]= L   
     df["dist_head"]= df["dist_head_total"]/df["duration"]
-    return df
+    return df.drop("dist_head_total",axis='columns', inplace=True)
 
 def create_df_distances_gaze(df):
     """Takes a dataframe which has the column "diapo" and the column "duration" and add a column "dist-gaze_0" and "dist-gaze_0". 
@@ -193,7 +193,7 @@ def create_df_distances_gaze(df):
         L1+=Lj
     df["dist_gaze_1_total"]= L1 
     df["dist_gaze_1"]= df["dist_gaze_1_total"]/df["duration"]
-    return df    
+    return df.drop(['dist_gaze_1_total', 'dist_gaze_0_total'],axis='columns', inplace=True)  
 
 
 def create_df_distances_pose_x(df):
@@ -216,7 +216,7 @@ def create_df_distances_pose_x(df):
         L+=Lj
     df["pose_x_total"]= L
     df["pose_x"]=df["pose_x_total"]/df["duration"]
-    return df
+    return df.drop('pose_x_total',axis='columns', inplace=True)
 
 def create_df_distances_pose_y(df):
     """Takes a dataframe which has the column "diapo" and the column "duration" and add a column "pose_y". 
@@ -239,7 +239,7 @@ def create_df_distances_pose_y(df):
         L+=Lj
     df["pose_y_total"]= L 
     df["pose_y"]=df["pose_y_total"]/df["duration"] 
-    return df    
+    return df.drop('pose_y_total',axis='columns', inplace=True)    
 
 def create_df_distances_pose_z(df):
     """Takes a dataframe which has the column "diapo" and the column "dutration" and add a column "pose_z". 
@@ -263,6 +263,6 @@ def create_df_distances_pose_z(df):
         L+=Lj
     df["pose_z_total"]= L  
     df["pose_z"]=df["pose_z_total"]/df["duration"] 
-    return df        
+    return df.drop('pose_z_total',axis='columns', inplace=True)      
 
 
