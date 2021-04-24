@@ -118,13 +118,14 @@ def total_distance_head(df):
     return dist        
 
 def create_df_distances_head(df):
-    """Takes a dataframe which has the column diapos and add a column "dist-head". 
+    """Takes a dataframe which has the column diapo and add a column "dist-head". 
     This new column contains the distance traveled by the head during a diapo, therefore
     it is a column which has a numer of values equal to the number of different diapos
 
     Parameters
     
     """
+    df=df.copy()
     L=[]
     diapos = [1,8,9,10,11,12,17, 18]
     for j in diapos:
@@ -136,5 +137,24 @@ def create_df_distances_head(df):
         L+=Lj
     df["dist_head"]= L   
     return df
+def create_df_difference_timestamp(df):    
+    """Takes a dataframe which has the column diapo and add a column "duration". 
+    This new column contains the duration of each diapo, therefore
+    it is a column which has a numer of values equal to the number of different diapos
 
+    Parameters
+     ----------
+    df: Dataframe
+    Name of the dataframe"""
+    df=df.copy()
+    L=[]
+    diapos = [1,8,9,10,11,12,17, 18]
+    for j in diapos:
+        lj=df.index[df['diapo'] == j].tolist()
+        tempj = df.loc[lj[-1],'timestamp']-df.loc[lj[0], 'timestamp']
+       
+        Lj = list(repeat(tempj, len(lj))) 
+        L+=Lj
+    df["duration"]= L
+    return df
 
