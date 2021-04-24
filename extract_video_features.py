@@ -118,7 +118,7 @@ def total_distance_head(df):
     return dist  
 
 def create_df_difference_timestamp(df):    
-    """Takes a dataframe which has the column diapo and add a column "duration". 
+    """Takes a dataframe which has the column diapo and adds a column "duration". 
     This new column contains the duration of each diapo, therefore
     it is a column which has a numer of values equal to the number of different diapos
 
@@ -139,7 +139,7 @@ def create_df_difference_timestamp(df):
     return df          
 
 def create_df_distances_head(df):
-    """Takes a dataframe which has the column "diapo" and the column "duration" and add a column "dist-head". 
+    """Takes a dataframe which has the column "diapo" and the column "duration" and adds a column "dist-head". 
     This new column contains the distance traveled by the head during a diapo, dividide by the dutration of each diapo, therefore
     it is a column which has a numer of values equal to the number of different diapos
 
@@ -158,10 +158,11 @@ def create_df_distances_head(df):
         L+=Lj
     df["dist_head_total"]= L   
     df["dist_head"]= df["dist_head_total"]/df["duration"]
-    return df.drop("dist_head_total",axis='columns', inplace=True)
+    df.drop("dist_head_total",axis='columns', inplace=True)
+    return df
 
 def create_df_distances_gaze(df):
-    """Takes a dataframe which has the column "diapo" and the column "duration" and add a column "dist-gaze_0" and "dist-gaze_0". 
+    """Takes a dataframe which has the column "diapo" and the column "duration" and adds a column "dist-gaze_0" and "dist-gaze_0". 
     This two new columns contain the distance traveled by each of the vector associated to the gaze, divided by the duration of the diapo.
 
     Parameters
@@ -193,11 +194,12 @@ def create_df_distances_gaze(df):
         L1+=Lj
     df["dist_gaze_1_total"]= L1 
     df["dist_gaze_1"]= df["dist_gaze_1_total"]/df["duration"]
-    return df.drop(['dist_gaze_1_total', 'dist_gaze_0_total'],axis='columns', inplace=True)  
+    df.drop(['dist_gaze_1_total', 'dist_gaze_0_total'],axis='columns', inplace=True)  
+    return df
 
 
 def create_df_distances_pose_x(df):
-    """Takes a dataframe which has the column "diapo" and the column "duration" and add a column "pose_x". 
+    """Takes a dataframe which has the column "diapo" and the column "duration" and adds a column "dist_pose_x". 
     This new column contains the variation of pose_x during each diapo, divided by the duration of the diapo.
 
     Parameters
@@ -215,11 +217,12 @@ def create_df_distances_pose_x(df):
         Lj = list(repeat(distj, len(lj))) 
         L+=Lj
     df["pose_x_total"]= L
-    df["pose_x"]=df["pose_x_total"]/df["duration"]
-    return df.drop('pose_x_total',axis='columns', inplace=True)
+    df["dist_pose_x"]=df["pose_x_total"]/df["duration"]
+    df.drop('pose_x_total',axis='columns', inplace=True)
+    return df
 
 def create_df_distances_pose_y(df):
-    """Takes a dataframe which has the column "diapo" and the column "duration" and add a column "pose_y". 
+    """Takes a dataframe which has the column "diapo" and the column "duration" and adds a column "dist_pose_y". 
     This new column contains the variation of pose_y during each diapo, divided by the duration of the diapo.
 
     Parameters
@@ -238,11 +241,12 @@ def create_df_distances_pose_y(df):
         Lj = list(repeat(distj, len(lj))) 
         L+=Lj
     df["pose_y_total"]= L 
-    df["pose_y"]=df["pose_y_total"]/df["duration"] 
-    return df.drop('pose_y_total',axis='columns', inplace=True)    
+    df["dist_pose_y"]=df["pose_y_total"]/df["duration"] 
+    df.drop('pose_y_total',axis='columns', inplace=True) 
+    return df   
 
 def create_df_distances_pose_z(df):
-    """Takes a dataframe which has the column "diapo" and the column "dutration" and add a column "pose_z". 
+    """Takes a dataframe which has the column "diapo" and the column "duration" and adds a column "pose_z". 
     This new column contains the variation of pose_z during each diapo, divided by the duration of the diapo.
 
 
@@ -262,7 +266,36 @@ def create_df_distances_pose_z(df):
         Lj = list(repeat(distj, len(lj))) 
         L+=Lj
     df["pose_z_total"]= L  
-    df["pose_z"]=df["pose_z_total"]/df["duration"] 
-    return df.drop('pose_z_total',axis='columns', inplace=True)      
+    df["dist_pose_z"]=df["pose_z_total"]/df["duration"] 
+    df.drop('pose_z_total',axis='columns', inplace=True)  
+    return df
+
+
+def add_dist_features(df):
+    """Takes a dataframe, adds all the features with distances and erase the position features without distances. 
+    This new column contains the variation of pose_z during each diapo, divided by the duration of the diapo.
+
+
+    Parameters
+    ----------
+    df: Dataframe
+    Name of the dataframe
+    
+    """
+
+
+    df =create_df_difference_timestamp(df)
+    df = create_df_distances_head(df)
+    df = create_df_distances_gaze(df)
+    df= create_df_distances_pose_x(df)
+    df= create_df_distances_pose_y(df)
+    df=create_df_distances_pose_z(df)
+
+    features_to_erase = ['duration','gaze_0_x',
+       'gaze_0_y', 'gaze_0_z', 'gaze_1_x', 'gaze_1_y', 'gaze_1_z',
+       'gaze_angle_x', 'gaze_angle_y', 'pose_Tx', 'pose_Ty', 'pose_Tz',
+       'pose_Rx', 'pose_Ry', 'pose_Rz']
+    df.drop(features_to_erase,axis='columns', inplace=True)
+    return df    
 
 
