@@ -137,13 +137,46 @@ def create_df_distances_head(df):
         L+=Lj
     df["dist_head"]= L   
     return df
+
+def create_df_distances_gaze(df):
+    """Takes a dataframe which has the column diapo and add a column "dist-gaze_0" and "dist-gaze_0". 
+    This two new columns contain the distance traveled by each of the vector associated to the gaze.
+
+    Parameters
+    ----------
+    df: Dataframe
+    Name of the dataframe
+    
+    """
+    df=df.copy()
+    L0=[]
+    diapos = [1,8,9,10,11,12,17, 18]
+    for j in diapos:
+        lj=df.index[df['diapo'] == j].tolist()
+        distj=0
+        for i in lj[:-1]:
+            distj+= math.sqrt((df.loc[i, "gaze_0_x"]-df.loc[i+1, "gaze_0_x"])**2 +(df.loc[i, "gaze_0_y"]-df.loc[i+1, "gaze_0_y"])**2+(df.loc[i, "gaze_0_z"]-df.loc[i+1, "gaze_0_z"])**2 )
+        Lj = list(repeat(distj, len(lj))) 
+        L0+=Lj
+    df["dist_gaze_0"]= L0 
+    L1=[]
+    diapos = [1,8,9,10,11,12,17, 18]
+    for j in diapos:
+        lj=df.index[df['diapo'] == j].tolist()
+        distj=0
+        for i in lj[:-1]:
+            distj+= math.sqrt((df.loc[i, "gaze_1_x"]-df.loc[i+1, "gaze_1_x"])**2 +(df.loc[i, "gaze_1_y"]-df.loc[i+1, "gaze_1_y"])**2+(df.loc[i, "gaze_1_z"]-df.loc[i+1, "gaze_1_z"])**2 )
+        Lj = list(repeat(distj, len(lj))) 
+        L1+=Lj
+    df["dist_gaze_1"]= L1 
+    return df    
 def create_df_difference_timestamp(df):    
     """Takes a dataframe which has the column diapo and add a column "duration". 
     This new column contains the duration of each diapo, therefore
     it is a column which has a numer of values equal to the number of different diapos
 
     Parameters
-     ----------
+    ----------
     df: Dataframe
     Name of the dataframe"""
     df=df.copy()
@@ -157,4 +190,63 @@ def create_df_difference_timestamp(df):
         L+=Lj
     df["duration"]= L
     return df
+
+def create_df_distances_pose_x(df):
+    """Takes a dataframe which has the column diapos and add a column "pose_x". 
+    This new column contains the variation of pose_x during each diapo
+
+    Parameters
+    
+    """
+    L=[]
+    diapos = [1,8,9,10,11,12,17, 18]
+    for j in diapos:
+        lj=df.index[df['diapo'] == j].tolist()
+        distj=0
+        for i in lj[:-1]:
+            distj+= abs(df.loc[i, "pose_Rx"]-df.loc[i+1, "pose_Rx"])
+        Lj = list(repeat(distj, len(lj))) 
+        L+=Lj
+    df["pose_x"]= L   
+    return df
+
+def create_df_distances_pose_y(df):
+    """Takes a dataframe which has the column diapos and add a column "pose_y". 
+    This new column contains the variation of pose_y during each diapo
+
+    Parameters
+    
+    """
+    L=[]
+    diapos = [1,8,9,10,11,12,17, 18]
+    for j in diapos:
+        lj=df.index[df['diapo'] == j].tolist()
+        distj=0
+        for i in lj[:-1]:
+            distj+= abs(df.loc[i, "pose_Ry"]-df.loc[i+1, "pose_Ry"])
+        Lj = list(repeat(distj, len(lj))) 
+        L+=Lj
+    df["pose_y"]= L   
+    return df    
+
+def create_df_distances_pose_z(df):
+    """Takes a dataframe which has the column diapos and add a column "pose_z". 
+    This new column contains the variation of pose_z during each diapo
+
+
+    Parameters
+    
+    """
+    L=[]
+    diapos = [1,8,9,10,11,12,17, 18]
+    for j in diapos:
+        lj=df.index[df['diapo'] == j].tolist()
+        distj=0
+        for i in lj[:-1]:
+            distj+= abs(df.loc[i, "pose_Ry"]-df.loc[i+1, "pose_Ry"])
+        Lj = list(repeat(distj, len(lj))) 
+        L+=Lj
+    df["pose_y"]= L   
+    return df        
+
 
