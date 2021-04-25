@@ -140,7 +140,7 @@ def create_df_difference_timestamp(df):
 
 def create_df_distances_head(df):
     """Takes a dataframe which has the column "diapo" and the column "duration" and adds a column "dist-head". 
-    This new column contains the distance traveled by the head during a diapo, dividide by the dutration of each diapo, therefore
+    This new column contains the distance traveled by the head during a diapo, divided by the dutration of each diapo, therefore
     it is a column which has a numer of values equal to the number of different diapos
 
     Parameters
@@ -162,7 +162,7 @@ def create_df_distances_head(df):
     return df
 
 def create_df_distances_gaze(df):
-    """Takes a dataframe which has the column "diapo" and the column "duration" and adds a column "dist-gaze_0" and "dist-gaze_0". 
+    """Takes a dataframe which has the column "diapo" and the column "duration" and adds a column "dist-gaze_0" and "dist-gaze_1". 
     This two new columns contain the distance traveled by each of the vector associated to the gaze, divided by the duration of the diapo.
 
     Parameters
