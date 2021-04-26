@@ -4,7 +4,7 @@ import platform
 import pandas as pd
 import math
 from annotations import add_video_annotations
-from itertools import repeat
+
 
 def extract_video_features(OpenFace_directory, Video_path):
     '''
@@ -142,7 +142,7 @@ def create_df_distances_head(df):
             distj+= math.sqrt((df.loc[i, "pose_Tx"]-df.loc[i+1, "pose_Tx"])**2 +(df.loc[i, "pose_Ty"]-df.loc[i+1, "pose_Ty"])**2+(df.loc[i, "pose_Tz"]-df.loc[i+1, "pose_Tz"])**2 )
 
         df.loc[df['diapo']==j,'dist_head']=distj    
-        
+    df['dist_head']=df['dist_head']/df['duration']     
     return df
 
 def create_df_distances_gaze(df):
@@ -164,7 +164,7 @@ def create_df_distances_gaze(df):
         for i in lj[:-1]:
             distj+= math.sqrt((df.loc[i, "gaze_0_x"]-df.loc[i+1, "gaze_0_x"])**2 +(df.loc[i, "gaze_0_y"]-df.loc[i+1, "gaze_0_y"])**2+(df.loc[i, "gaze_0_z"]-df.loc[i+1, "gaze_0_z"])**2 )
         df.loc[df['diapo']==j,'dist_gaze_0']=distj 
-
+    df['dist_gaze_0']=df['dist_gaze_0']/df['duration'] 
     diapos = [1,8,9,10,11,12,17, 18]
     for j in diapos:
         lj=df.index[df['diapo'] == j].tolist()
@@ -172,6 +172,7 @@ def create_df_distances_gaze(df):
         for i in lj[:-1]:
             distj+= math.sqrt((df.loc[i, "gaze_1_x"]-df.loc[i+1, "gaze_1_x"])**2 +(df.loc[i, "gaze_1_y"]-df.loc[i+1, "gaze_1_y"])**2+(df.loc[i, "gaze_1_z"]-df.loc[i+1, "gaze_1_z"])**2 )
         df.loc[df['diapo']==j,'dist_gaze_1']=distj
+    df['dist_gaze_1']=df['dist_gaze_1']/df['duration']
     return df
 
 
@@ -191,7 +192,8 @@ def create_df_distances_pose_x(df):
         distj=0
         for i in lj[:-1]:
             distj+= abs(df.loc[i, "pose_Rx"]-df.loc[i+1, "pose_Rx"])
-        df.loc[df['diapo']==j,'dist_pose_x']=distj    
+        df.loc[df['diapo']==j,'dist_pose_x']=distj  
+    df['dist_pose_x']=  df['dist_pose_x']/df['duration']
     return df
 
 def create_df_distances_pose_y(df):
@@ -213,6 +215,7 @@ def create_df_distances_pose_y(df):
         for i in lj[:-1]:
             distj+= abs(df.loc[i, "pose_Ry"]-df.loc[i+1, "pose_Ry"])
         df.loc[df['diapo']==j,'dist_pose_y']=distj
+    df['dist_pose_y']=  df['dist_pose_y']/df['duration']    
     return df   
 
 def create_df_distances_pose_z(df):
@@ -235,6 +238,7 @@ def create_df_distances_pose_z(df):
         for i in lj[:-1]:
             distj+= abs(df.loc[i, "pose_Rz"]-df.loc[i+1, "pose_Rz"])
         df.loc[df['diapo']==j,'dist_pose_z']=distj
+    df['dist_pose_z']=  df['dist_pose_z']/df['duration']     
     return df
 
 
@@ -255,7 +259,7 @@ def add_dist_features(df):
     df= create_df_distances_pose_y(df)
     df=create_df_distances_pose_z(df)
 
-    features_to_erase = ['gaze_0_x',
+    features_to_erase = ['duration, ''gaze_0_x',
        'gaze_0_y', 'gaze_0_z', 'gaze_1_x', 'gaze_1_y', 'gaze_1_z',
        'gaze_angle_x', 'gaze_angle_y', 'pose_Tx', 'pose_Ty', 'pose_Tz',
        'pose_Rx', 'pose_Ry', 'pose_Rz']
