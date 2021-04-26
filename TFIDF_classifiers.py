@@ -90,7 +90,7 @@ tfidf = TfidfTransformer()
 X_tfidf = tfidf.fit_transform(X_vect)
 
 
-#Multinomial Naive Bayes
+#Classifiers
 clf = MultinomialNB()
 clf_RF = RandomForestClassifier()
 clf_SVC = SVC()
@@ -125,6 +125,6 @@ for train_index, test_index in skf.split(X_cv, y_cv):
     scores_list_RF.append(score_RF)
     scores_list_SVC.append(score_SVC)
 
-print(f'MNB : {np.mean(scores_list)}')
-print(f'RF : {np.mean(scores_list_RF)}')
-print(f'SVC : {np.mean(scores_list_SVC)}')
+print(f'MNB : {round(np.mean(scores_list),4)}')
+print(f'RF : {round(np.mean(scores_list_RF),4)}')
+print(f'SVC : {round(np.mean(scores_list_SVC),4)}')
