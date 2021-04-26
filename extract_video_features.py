@@ -157,7 +157,8 @@ def create_df_distances_head(df):
         Lj = list(repeat(distj, len(lj))) 
         L+=Lj
     df["dist_head_total"]= L   
-    df["dist_head"]= df["dist_head_total"]/df["duration"]
+    #df["dist_head"]= df["dist_head_total"]/df["duration"]
+    df["dist_head"]= df["dist_head_total"]/1
     df.drop("dist_head_total",axis='columns', inplace=True)
     return df
 
@@ -182,7 +183,9 @@ def create_df_distances_gaze(df):
         Lj = list(repeat(distj, len(lj))) 
         L0+=Lj
     df["dist_gaze_0_total"]= L0 
-    df["dist_gaze_0"]= df["dist_gaze_0_total"]/df["duration"]
+    #df["dist_gaze_0"]= df["dist_gaze_0_total"]/df["duration"]
+    df["dist_gaze_0"]= df["dist_gaze_0_total"]/1
+
     L1=[]
     diapos = [1,8,9,10,11,12,17, 18]
     for j in diapos:
@@ -193,7 +196,9 @@ def create_df_distances_gaze(df):
         Lj = list(repeat(distj, len(lj))) 
         L1+=Lj
     df["dist_gaze_1_total"]= L1 
-    df["dist_gaze_1"]= df["dist_gaze_1_total"]/df["duration"]
+    #df["dist_gaze_1"]= df["dist_gaze_1_total"]/df["duration"]
+    df["dist_gaze_1"]= df["dist_gaze_1_total"]/1
+
     df.drop(['dist_gaze_1_total', 'dist_gaze_0_total'],axis='columns', inplace=True)  
     return df
 
@@ -217,7 +222,8 @@ def create_df_distances_pose_x(df):
         Lj = list(repeat(distj, len(lj))) 
         L+=Lj
     df["pose_x_total"]= L
-    df["dist_pose_x"]=df["pose_x_total"]/df["duration"]
+    #df["dist_pose_x"]=df["pose_x_total"]/df["duration"]
+    df["dist_pose_x"]=df["pose_x_total"]/1
     df.drop('pose_x_total',axis='columns', inplace=True)
     return df
 
@@ -241,7 +247,8 @@ def create_df_distances_pose_y(df):
         Lj = list(repeat(distj, len(lj))) 
         L+=Lj
     df["pose_y_total"]= L 
-    df["dist_pose_y"]=df["pose_y_total"]/df["duration"] 
+    #df["dist_pose_y"]=df["pose_y_total"]/df["duration"] 
+    df["dist_pose_y"]=df["pose_y_total"]/1
     df.drop('pose_y_total',axis='columns', inplace=True) 
     return df   
 
@@ -266,7 +273,9 @@ def create_df_distances_pose_z(df):
         Lj = list(repeat(distj, len(lj))) 
         L+=Lj
     df["pose_z_total"]= L  
-    df["dist_pose_z"]=df["pose_z_total"]/df["duration"] 
+    #df["dist_pose_z"]=df["pose_z_total"]/df["duration"]
+    df["dist_pose_z"]=df["pose_z_total"]/1
+
     df.drop('pose_z_total',axis='columns', inplace=True)  
     return df
 
