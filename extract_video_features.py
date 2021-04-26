@@ -76,7 +76,7 @@ def get_df_video_with_annotations(OpenFace_processed_path, Name_video, Annotatio
 def check_success(df):
    
     '''
-    Gives the percentage of the frames in which OpenFace succeeded in the detection a face 
+    Give the percentage of the frames in which OpenFace succeeded in the detection a face 
     
     Parameters
     ----------
@@ -87,8 +87,8 @@ def check_success(df):
 
 def eliminate_features(df):
     '''
-    Takes a dataframe, as produced from the csv of OpenFace, 
-    and keeps only the features 'frame', 'face_id', 'timestamp', 'confidence', 'success',
+    Take a dataframe, as produced from the csv of OpenFace, 
+    and keep only the features 'frame', 'face_id', 'timestamp', 'confidence', 'success',
     and the features related to eye gaze, AU, and head movements.
 
     Parameters
@@ -101,31 +101,17 @@ def eliminate_features(df):
             del df[i]
     return df 
 
-def total_distance_head(df):
-    """ Takes a datframe as produced from the csv of OpenFace, 
-    and returns the total distance in millimeters traveled by the head
-    during the video
-    
-    Parameters
-    ----------
-    df: Dataframe
-    Name of the dataframe
-    """
-
-    dist=0
-    for i in range(df.shape[0]-1):
-        dist+= math.sqrt((df.loc[i, "pose_Tx"]-df.loc[i+1, "pose_Tx"])**2 +(df.loc[i, "pose_Ty"]-df.loc[i+1, "pose_Ty"])**2+(df.loc[i, "pose_Tz"]-df.loc[i+1, "pose_Tz"])**2 )
-    return dist  
-
 def create_df_difference_timestamp(df):    
-    """Takes a dataframe which has the column diapo and adds a column "duration". 
+    """
+    Take a dataframe which has the column 'diapo' and add a column 'duration'. 
     This new column contains the duration of each diapo, therefore
     it is a column which has a number of values equal to the number of different diapos
 
     Parameters
     ----------
     df: Dataframe
-    Name of the dataframe"""
+    Name of the dataframe
+    """
     df=df.copy()
     diapos = [1,8,9,10,11,12,17, 18]
     for j in diapos:
@@ -136,16 +122,17 @@ def create_df_difference_timestamp(df):
     return df                 
 
 def create_df_distances_head(df):
-    """Takes a dataframe which has the column "diapo" and the column and adds a column "dist-head". 
+    """
+    Take a dataframe which has the column "diapo" and the column and add a column "dist-head". 
     This new column contains the distance traveled by the head during a diapo, therefore
     it is a column which has a numer of values equal to the number of different diapos
 
     Parameters
     ----------
     df: Dataframe
-    Name of the dataframe"""
-    
-  
+    Name of the dataframe
+    """
+
     df=df.copy()
     diapos = [1,8,9,10,11,12,17, 18]
     for j in diapos:
@@ -159,8 +146,9 @@ def create_df_distances_head(df):
     return df
 
 def create_df_distances_gaze(df):
-    """Takes a dataframe which has the column "diapo" and the column "duration" and adds a column "dist-gaze_0" and "dist-gaze_1". 
-    This two new columns contain the distance traveled by each of the vector associated to the gaze, divided by the duration of the diapo.
+    """
+    Take a dataframe which has the column "diapo" and the column "duration" and add a column "dist-gaze_0" and "dist-gaze_1". 
+    This two new columns contain the distance traveled by each of the vector associated to the gaze.
 
     Parameters
     ----------
@@ -188,15 +176,15 @@ def create_df_distances_gaze(df):
 
 
 def create_df_distances_pose_x(df):
-    """Takes a dataframe which has the column "diapo" and the column "duration" and adds a column "dist_pose_x". 
-    This new column contains the variation of pose_x during each diapo, divided by the duration of the diapo.
+    """
+    Take a dataframe which has the column "diapo" and the column "duration" and add a column "dist_pose_x". 
+    This new column contains the variation of pose_x during each diapo.
 
     Parameters
     ----------
     df: Dataframe
     Name of the dataframe
     """
-    
     diapos = [1,8,9,10,11,12,17, 18]
     for j in diapos:
         lj=df.index[df['diapo'] == j].tolist()
@@ -207,8 +195,9 @@ def create_df_distances_pose_x(df):
     return df
 
 def create_df_distances_pose_y(df):
-    """Takes a dataframe which has the column "diapo" and the column "duration" and adds a column "dist_pose_y". 
-    This new column contains the variation of pose_y during each diapo, divided by the duration of the diapo.
+    """
+    Take a dataframe which has the column "diapo" and the column "duration" and add a column "dist_pose_y". 
+    This new column contains the variation of pose_y during each diapo.
 
     Parameters
     ----------
@@ -216,7 +205,7 @@ def create_df_distances_pose_y(df):
     Name of the dataframe
     
     """
-    L=[]
+   
     diapos = [1,8,9,10,11,12,17, 18]
     for j in diapos:
         lj=df.index[df['diapo'] == j].tolist()
@@ -227,8 +216,9 @@ def create_df_distances_pose_y(df):
     return df   
 
 def create_df_distances_pose_z(df):
-    """Takes a dataframe which has the column "diapo" and the column "duration" and adds a column "pose_z". 
-    This new column contains the variation of pose_z during each diapo, divided by the duration of the diapo.
+    """
+    Take a dataframe which has the column "diapo" and the column "duration" and add a column "pose_z". 
+    This new column contains the variation of pose_z during each diapo.
 
 
     Parameters
@@ -237,7 +227,7 @@ def create_df_distances_pose_z(df):
     Name of the dataframe
     
     """
-    L=[]
+   
     diapos = [1,8,9,10,11,12,17, 18]
     for j in diapos:
         lj=df.index[df['diapo'] == j].tolist()
@@ -249,9 +239,8 @@ def create_df_distances_pose_z(df):
 
 
 def add_dist_features(df):
-    """Takes a dataframe, adds all the features with distances and erase the position features without distances. 
-    This new column contains the variation of pose_z during each diapo, divided by the duration of the diapo.
-
+    """
+    Take a dataframe, add all the features with distances and erase the position features without distances.
 
     Parameters
     ----------
@@ -259,8 +248,6 @@ def add_dist_features(df):
     Name of the dataframe
     
     """
-
-
     df =create_df_difference_timestamp(df)
     df = create_df_distances_head(df)
     df = create_df_distances_gaze(df)
