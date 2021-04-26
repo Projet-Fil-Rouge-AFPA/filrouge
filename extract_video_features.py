@@ -259,7 +259,7 @@ def add_dist_features(df):
     df= create_df_distances_pose_y(df)
     df=create_df_distances_pose_z(df)
 
-    features_to_erase = ['duration, ''gaze_0_x',
+    features_to_erase = ['duration', 'gaze_0_x',
        'gaze_0_y', 'gaze_0_z', 'gaze_1_x', 'gaze_1_y', 'gaze_1_z',
        'gaze_angle_x', 'gaze_angle_y', 'pose_Tx', 'pose_Ty', 'pose_Tz',
        'pose_Rx', 'pose_Ry', 'pose_Rz']
