@@ -99,7 +99,9 @@ def eliminate_features(df):
     for i in df.columns:
         if "eye" in i or "x_" in i or 'y_' in i or 'z_' in i or 'X_' in i or 'Y_' in i or 'Z_' in i or 'p_' in i:
             del df[i]
-    return df 
+    return df
+
+
 
 def create_df_difference_timestamp(df):    
     """
@@ -259,7 +261,7 @@ def add_dist_features(df):
     df= create_df_distances_pose_y(df)
     df=create_df_distances_pose_z(df)
 
-    features_to_erase = ['duration, ''gaze_0_x',
+    features_to_erase = ['duration', 'gaze_0_x',
        'gaze_0_y', 'gaze_0_z', 'gaze_1_x', 'gaze_1_y', 'gaze_1_z',
        'gaze_angle_x', 'gaze_angle_y', 'pose_Tx', 'pose_Ty', 'pose_Tz',
        'pose_Rx', 'pose_Ry', 'pose_Rz']
