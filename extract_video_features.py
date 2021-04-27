@@ -96,10 +96,21 @@ def eliminate_features(df):
     df: Dataframe
     Name of the dataframe
     '''
-    for i in df.columns:
-        if "eye" in i or "x_" in i or 'y_' in i or 'z_' in i or 'X_' in i or 'Y_' in i or 'Z_' in i or 'p_' in i:
-            del df[i]
-    return df
+
+    features_to_keep = [
+    'frame','face_id','timestamp','confidence','success',
+
+    'AU01_r', 'AU02_r', 'AU04_r', 'AU05_r', 'AU06_r', 'AU07_r', 'AU09_r', 'AU10_r', 'AU12_r', 'AU14_r', 'AU15_r', 'AU17_r', 'AU20_r', 'AU23_r', 'AU25_r', 'AU26_r', 'AU45_r',
+    'AU01_c', 'AU02_c', 'AU04_c', 'AU05_c', 'AU06_c', 'AU07_c', 'AU09_c', 'AU10_c', 'AU12_c', 'AU14_c', 'AU15_c', 'AU17_c', 'AU20_c', 'AU23_c', 'AU25_c', 'AU26_c', 'AU28_c', 'AU45_c',
+
+    'gaze_0_x','gaze_0_y', 'gaze_0_z', 'gaze_1_x', 'gaze_1_y', 'gaze_1_z',
+    'gaze_angle_x', 'gaze_angle_y', 
+    'pose_Tx', 'pose_Ty', 'pose_Tz','pose_Rx', 'pose_Ry', 'pose_Rz',
+
+    'type_candidat','sexe','video_name','stress_global','stress','diapo'
+]
+    
+    return df[features_to_keep]
 
 
 
