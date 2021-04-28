@@ -21,8 +21,10 @@ def multi_to_binary(y):
     y = y.squeeze().astype(int)
     #Convert to binary targets
     y_1 = y.replace(2, 1)
-    y_2 = y.replace(1, 0)
     
+    y_2 = y.replace(1, 0)
+    y_2 = y_2.replace(2, 1)
+
     targets = [y_1, y_2]
     return targets
 
