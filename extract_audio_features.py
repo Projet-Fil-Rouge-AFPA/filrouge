@@ -62,6 +62,7 @@ def extract_features(wav_filepath, open_smile_conf_path, feature_name):
 
     timeout = 300_000
     try:
+        wav_filepath = wav_filepath.replace(' ', '\ ')
         command = "./SMILExtract -C " + open_smile_conf_path + " -I " + wav_filepath + " -O " + wav_filepath + "." + feature_name + ".csv"
         #command = "pwd"
         process = subprocess.run([command], timeout=timeout, shell=True, check=True, capture_output=True)
@@ -85,7 +86,7 @@ def extract_features_prosody(wav_filepath):
         string: path of the feature csv file
     """
     
-    open_smile_conf_path = "prosodyAcf_modif.conf"
+    open_smile_conf_path = "filrouge/OpenSmile_config/prosodyAcf_modif.conf"
     feature_name = "prosody"
     extract_features(wav_filepath, open_smile_conf_path, feature_name)
 
@@ -101,7 +102,7 @@ def extract_features_mfcc(wav_filepath):
         string: path of the feature csv file
     """
 
-    open_smile_conf_path = "MFCC12_0_D_A_Z_modif.conf"
+    open_smile_conf_path = "filrouge/OpenSmile_config/MFCC12_0_D_A_Z_modif.conf"
     feature_name = "mfcc"
     extract_features(wav_filepath, open_smile_conf_path, feature_name)
 
@@ -117,13 +118,13 @@ def extract_features_emobase(wav_filepath):
         string: path of the feature csv file
     """
     
-    open_smile_conf_path = "emobase_modif.conf"
+    open_smile_conf_path = "filrouge/OpenSmile_config/emobase_modif.conf"
     feature_name = "emobase"
     extract_features(wav_filepath, open_smile_conf_path, feature_name)
     
     return wav_filepath + "." + feature_name + ".csv"
 
-def write_audio_annotations(features_filename_path_list, filename_annotations):
+def write_audio_annotations(features_filename_path_list, filename_annotations, agreg_annotators):
     """ Add video annotations to the features file
 
     Args:
@@ -139,7 +140,8 @@ def write_audio_annotations(features_filename_path_list, filename_annotations):
 
     for features_filename_path, video_filename in zip(features_filename_path_list,video_filenames_list):
         df_features = pd.read_csv(features_filename_path, delimiter=';')
-        df_features_annoted = add_video_annotations(df_features, filename_annotations, 1, video_filename)
+        df_features_annoted = add_video_annotations(df_features, filename_annotations, 1, video_filename, agreg_annotators)
+        print(video_filename, df_features_annoted.shape)
         if df_features_annoted.shape[0] > 0:
             features_filename_path = features_filename_path[:-4] + '.annotated.csv'
             df_features_annoted.to_csv(features_filename_path, sep=';', index=False, header=True)
@@ -148,7 +150,7 @@ def write_audio_annotations(features_filename_path_list, filename_annotations):
     return annotated_files_list
 
 
-def preprocess_videos(directory_path, filename_annotations):
+def preprocess_videos(directory_path, filename_annotations, agreg_annotators):
     """ main function for prepressing videos
         and extracting audio features
 
@@ -163,7 +165,7 @@ def preprocess_videos(directory_path, filename_annotations):
     t0 = time.time()
     
     # get videos files
-    videos_paths_list, _ = get_videos('videos')
+    videos_paths_list, _ = get_videos(directory_path)
     
 
     # extract the audio bands
@@ -179,7 +181,7 @@ def preprocess_videos(directory_path, filename_annotations):
     print(log)
 
     # add video annotations
-    annotated_files_list = write_audio_annotations(features_filename_path_list, filename_annotations)
+    annotated_files_list = write_audio_annotations(features_filename_path_list, filename_annotations, agreg_annotators)
     print(annotated_files_list)
 
     t3 = time.time()
@@ -194,8 +196,17 @@ def preprocess_videos(directory_path, filename_annotations):
 if __name__ == '__main__':
     
     # arguments initialisation
-    directory_path = 'videos'
+    directory_path = '../04 - Dev/videos'
     filename_annotations = 'Videos_Annotations - Template.csv'
+    filename_annotations = 'https://docs.google.com/spreadsheets/d/1Rqu1sJiD-ogc4a6R491JTiaYacptOTqh6DKqhwTa8NA/gviz/tq?tqx=out:csv&sheet=Template'
+    agreg_annotators = 'max'
     
     # launching the audio features extractions
-    preprocess_videos(directory_path, filename_annotations)
+     #preprocess_videos(directory_path, filename_annotations, agreg_annotators)
+
+    # write annotations
+    currentDirectory = pathlib.Path(directory_path)
+    currentPattern = "*.emobase.csv"
+    features_filename_path_list = [str(currentFile) for currentFile in currentDirectory.glob(currentPattern)]
+    print(features_filename_path_list)
+    write_audio_annotations(features_filename_path_list, filename_annotations, agreg_annotators)
