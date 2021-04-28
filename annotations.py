@@ -112,7 +112,7 @@ def add_video_annotations(df_features, filename_annotations, time_column_index, 
     # last sequence
     df.loc[(df.iloc[:,time_column_index] >= limit_2),['stress','diapo']] =  [stress_annotations[i],diapos[i]]
     df.diapo = df.diapo.astype(int)
-    df.stress = df.stress.astype(int)
-    df.stress_global = df.stress_global.astype(int)
+    df.stress = df.stress.astype(float)
+    df.stress_global = df.stress_global.astype(float)
 
     return df
