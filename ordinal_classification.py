@@ -19,6 +19,9 @@ def multi_to_binary(y):
         y_2: binary targets 0,1 (0) vs 2
         y_3: binary targets 0,1,2 (0) vs 3 (1)
     """
+    
+    y = pd.DataFrame(y)
+
     y = y.squeeze().astype(int)
     #Convert to binary targets
     y_1 = y.replace(2, 1)
@@ -65,7 +68,7 @@ def ordinal_classification(list_models, x_train, y_train, x_test):
     '''
     Use all functions to return an array of prediction
     Args:
-        list_models: list of 2 classifiers
+        list_models: list of 3 classifiers
         x_train, y_train, x_test: dataframes
     Returns:
         preds_argmax: array of prediction

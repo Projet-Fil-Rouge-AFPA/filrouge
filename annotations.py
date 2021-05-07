@@ -29,7 +29,7 @@ def get_annotations_video(filename_annotations, video_name, agreg_annotators):
         response17_start_time (int): start time (sec) of response 17 ('' if the video name is not found)
         stress_annotations ([int]): stress scores ('' if the video name is not found)
     """
-    df_annotations = pd.read_csv(filename_annotations,  header=None).drop([0, 1, 2, 3])
+    df_annotations = pd.read_csv(filename_annotations,  header=None).drop([0, 1, 2])
     df_annotations_video = df_annotations[df_annotations.iloc[:,1] == video_name]
 
     #Get participant type (formateur vs stagiaire)
