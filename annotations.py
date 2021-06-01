@@ -60,12 +60,12 @@ def get_annotations_video(filename_annotations, video_name, agreg_annotators):
 
     # Aggregate annotation of columns
     #For diapo 12-16
-    res = stress_annotations[5:8].max() #Compute max (can be changed)
+    res = np.round(stress_annotations[5:8].mean(),0)#max() #Compute max (can be changed)
     stress_annotations = np.delete(stress_annotations,[5,6,7]) #Delete the cols
     stress_annotations = np.insert(stress_annotations,5,res) #Replace by the aggregate
 
     #Now we do the same for diapo 18-23
-    res = stress_annotations[6:10].max()
+    res = np.round(stress_annotations[6:10].mean(),0)#max()
     stress_annotations = np.delete(stress_annotations,[6,7,8,9])
     stress_annotations = np.insert(stress_annotations,7,res)
 
