@@ -148,7 +148,28 @@ def create_df_difference_timestamp(df):
         tempj = df.loc[lj[-1],'timestamp']-df.loc[lj[0], 'timestamp']
         df.loc[df['diapo']==j,'duration']=tempj
        
-    return df                 
+    return df   
+
+def create_df_difference_timestamp_tW(df):    
+    """
+    Take a dataframe which has the column 'frameTimeWindow' and add a column 'duration_tW'. 
+    This new column contains the duration of timeWindow, therefore
+    it is a column which has a number of values equal to the number of different timeWindow
+
+    Parameters
+    ----------
+    df: Dataframe
+    Name of the dataframe
+    """
+    df=df.copy()
+    TimeWindow = df['frameTimeWindow'].unique()
+    for j in TimeWindow:
+        lj=df.index[df['frameTimeWindow'] == j].tolist()
+        tempj = df.loc[lj[-1],'timestamp']-df.loc[lj[0], 'timestamp']
+        df.loc[df['frameTimeWindow']==j,'duration_tW']=tempj
+       
+    return df       
+                  
 
 def create_df_distances_head(df):
     """
@@ -173,6 +194,31 @@ def create_df_distances_head(df):
         df.loc[df['diapo']==j,'dist_head']=distj    
     df['dist_head']=df['dist_head']/df['duration']     
     return df
+def create_df_distances_head_tW(df):
+    """
+    Take a dataframe which has the column 'frameTimeWindow' and the column and add a column "dist-head_tW". 
+    This new column contains the distance traveled by the head during a time window, therefore
+    it is a column which has a numer of values equal to the number of different time window
+
+    Parameters
+    ----------
+    df: Dataframe
+    Name of the dataframe
+    """
+
+    df=df.copy()
+    TimeWindow = df['frameTimeWindow'].unique()
+    for j in TimeWindow:
+        lj=df.index[df['frameTimeWindow'] == j].tolist()
+        distj=0
+        for i in lj[:-1]:
+            distj+= math.sqrt((df.loc[i, "pose_Tx"]-df.loc[i+1, "pose_Tx"])**2 +(df.loc[i, "pose_Ty"]-df.loc[i+1, "pose_Ty"])**2+(df.loc[i, "pose_Tz"]-df.loc[i+1, "pose_Tz"])**2 )
+
+        df.loc[df['frameTimeWindow']==j,'dist_head_tW']=distj    
+    df['dist_head_tW']=df['dist_head_tW']/df['duration_tW']     
+    return df
+
+
 
 def create_df_distances_gaze(df):
     """
@@ -205,6 +251,37 @@ def create_df_distances_gaze(df):
     return df
 
 
+def create_df_distances_gaze_tW(df):
+    """
+    Take a dataframe which has the column 'frameTimeWindow' and the column "duration_tW" and add a column "dist-gaze_0_tW" and "dist-gaze_1_tW". 
+    This two new columns contain the distance traveled by each of the vector associated to the gaze.
+
+    Parameters
+    ----------
+    df: Dataframe
+    Name of the dataframe
+    
+    """
+    df=df.copy()
+    TimeWindow = df['frameTimeWindow'].unique()
+    for j in TimeWindow:
+        lj=df.index[df['frameTimeWindow'] == j].tolist()
+        distj=0
+        for i in lj[:-1]:
+            distj+= math.sqrt((df.loc[i, "gaze_0_x"]-df.loc[i+1, "gaze_0_x"])**2 +(df.loc[i, "gaze_0_y"]-df.loc[i+1, "gaze_0_y"])**2+(df.loc[i, "gaze_0_z"]-df.loc[i+1, "gaze_0_z"])**2 )
+        df.loc[df['frameTimeWindow']==j,'dist_gaze_0_tW']=distj 
+    df['dist_gaze_0_tW']=df['dist_gaze_0_tW']/df['duration_tW'] 
+    TimeWindow = df['frameTimeWindow'].unique()
+    for j in TimeWindow:
+        lj=df.index[df['frameTimeWindow'] == j].tolist()
+        distj=0
+        for i in lj[:-1]:
+            distj+= math.sqrt((df.loc[i, "gaze_1_x"]-df.loc[i+1, "gaze_1_x"])**2 +(df.loc[i, "gaze_1_y"]-df.loc[i+1, "gaze_1_y"])**2+(df.loc[i, "gaze_1_z"]-df.loc[i+1, "gaze_1_z"])**2 )
+        df.loc[df['frameTimeWindow']==j,'dist_gaze_1_tW']=distj
+    df['dist_gaze_1_tW']=df['dist_gaze_1_tW']/df['duration_tW']
+    return df    
+
+
 def create_df_distances_pose_x(df):
     """
     Take a dataframe which has the column "diapo" and the column "duration" and add a column "dist_pose_x". 
@@ -224,6 +301,26 @@ def create_df_distances_pose_x(df):
         df.loc[df['diapo']==j,'dist_pose_x']=distj  
     df['dist_pose_x']=  df['dist_pose_x']/df['duration']
     return df
+
+def create_df_distances_pose_x_tW(df):
+    """
+    Take a dataframe which has the column 'frameTimeWindow' and the column "duration_tW" and add a column "dist_pose_x_tW". 
+    This new column contains the variation of pose_x during each diapo.
+
+    Parameters
+    ----------
+    df: Dataframe
+    Name of the dataframe
+    """
+    TimeWindow = df['frameTimeWindow'].unique()
+    for j in TimeWindow:
+        lj=df.index[df['frameTimeWindow'] == j].tolist()
+        distj=0
+        for i in lj[:-1]:
+            distj+= abs(df.loc[i, "pose_Rx"]-df.loc[i+1, "pose_Rx"])
+        df.loc[df['frameTimeWindow']==j,'dist_pose_x_tW']=distj  
+    df['dist_pose_x_tW']=  df['dist_pose_x_tW']/df['duration_tW']
+    return df    
 
 def create_df_distances_pose_y(df):
     """
@@ -246,6 +343,26 @@ def create_df_distances_pose_y(df):
         df.loc[df['diapo']==j,'dist_pose_y']=distj
     df['dist_pose_y']=  df['dist_pose_y']/df['duration']    
     return df   
+def create_df_distances_pose_y_tW(df):
+    """
+    Take a dataframe which has the column 'frameTimeWindow' and the column "duration_tW" and add a column "dist_pose_y_tW". 
+    This new column contains the variation of pose_y during each time window.
+
+    Parameters
+    ----------
+    df: Dataframe
+    Name of the dataframe
+    """
+    TimeWindow = df['frameTimeWindow'].unique()
+    for j in TimeWindow:
+        lj=df.index[df['frameTimeWindow'] == j].tolist()
+        distj=0
+        for i in lj[:-1]:
+            distj+= abs(df.loc[i, "pose_Ry"]-df.loc[i+1, "pose_Ry"])
+        df.loc[df['frameTimeWindow']==j,'dist_pose_y_tW']=distj  
+    df['dist_pose_y_tW']=  df['dist_pose_y_tW']/df['duration_tW']
+    return df    
+
 
 def create_df_distances_pose_z(df):
     """
@@ -269,6 +386,26 @@ def create_df_distances_pose_z(df):
         df.loc[df['diapo']==j,'dist_pose_z']=distj
     df['dist_pose_z']=  df['dist_pose_z']/df['duration']     
     return df
+
+def create_df_distances_pose_z_tW(df):
+    """
+    Take a dataframe which has the column 'frameTimeWindow' and the column "duration_tW" and add a column "dist_pose_z_tW". 
+    This new column contains the variation of pose_z during each time window.
+
+    Parameters
+    ----------
+    df: Dataframe
+    Name of the dataframe
+    """
+    TimeWindow = df['frameTimeWindow'].unique()
+    for j in TimeWindow:
+        lj=df.index[df['frameTimeWindow'] == j].tolist()
+        distj=0
+        for i in lj[:-1]:
+            distj+= abs(df.loc[i, "pose_Rz"]-df.loc[i+1, "pose_Rz"])
+        df.loc[df['frameTimeWindow']==j,'dist_pose_z_tW']=distj  
+    df['dist_pose_z_tW']=  df['dist_pose_z_tW']/df['duration_tW']
+    return df        
 
 
 def add_dist_features(df):
@@ -295,4 +432,28 @@ def add_dist_features(df):
     df.drop(features_to_erase,axis='columns', inplace=True)
     return df    
 
+def add_dist_features_tW(df):
+    """
+    Take a dataframe, add all the features with distances in time window and erase the position features without distances.
+
+    Parameters
+    ----------
+    df: Dataframe
+    Name of the dataframe
+    
+    """
+    df = add_frameTimeWindow(df)
+    df =create_df_difference_timestamp_tW(df)
+    df = create_df_distances_head_tW(df)
+    df = create_df_distances_gaze_tW(df)
+    df= create_df_distances_pose_x_tW(df)
+    df= create_df_distances_pose_y_tW(df)
+    df=create_df_distances_pose_z_tW(df)
+
+    features_to_erase = ['duration_tW', 'gaze_0_x',
+       'gaze_0_y', 'gaze_0_z', 'gaze_1_x', 'gaze_1_y', 'gaze_1_z',
+       'gaze_angle_x', 'gaze_angle_y', 'pose_Tx', 'pose_Ty', 'pose_Tz',
+       'pose_Rx', 'pose_Ry', 'pose_Rz']
+    df.drop(features_to_erase,axis='columns', inplace=True)
+    return df    
 
