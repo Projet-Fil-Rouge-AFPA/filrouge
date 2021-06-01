@@ -1,6 +1,7 @@
 import os
 import subprocess
 import platform
+import numpy as np 
 import pandas as pd
 import math
 from annotations import add_video_annotations
@@ -112,7 +113,22 @@ def eliminate_features(df):
     
     return df[features_to_keep]
 
+def add_frameTimeWindow(df):
+    """
+    Take a dataframe which has the column 'timestamp', add a column "frameTimeWindow"
+    the value of frameTimeWindow is equal to 0 if timestamp < time_window
+    1 if time_window <timestamp< 2* timewindow ...
 
+    Parameters
+    ----------
+    df: Dataframe
+    Name of the dataframe
+    """
+
+    time_window = 5
+    df['frameTimeWindow'] = df.timestamp.apply(lambda x : np.floor(x / time_window)).astype(int)
+
+    return df 
 
 def create_df_difference_timestamp(df):    
     """
