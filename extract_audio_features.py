@@ -7,6 +7,15 @@ import subprocess
 import time
 from annotations import add_video_annotations
 
+def concatenate_spread(df, col, suffix='_de', lag = 1):
+    df[col + suffix] = df[col] - df[col].shift(lag)
+    return df
+
+def concatenate_spread_1_and_2(df, col, suffix='_de', lag = 1):
+    df[col + suffix] = df[col] - df[col].shift(lag)
+    df[col + suffix + suffix] = df[col + suffix] - df[col + suffix].shift(lag)
+    return df
+
 
 def get_videos(directory_path):
     """ Get videos paths
@@ -124,6 +133,30 @@ def extract_features_emobase(wav_filepath):
     
     return wav_filepath + "." + feature_name + ".csv"
 
+def extract_features_eGeMAPS(wav_filepath):
+    """ Extract the EMOBASE features from a wav audio file
+
+    Args:
+        wav_filepath (string): path of the wav file
+
+    Returns:
+        string: path of the feature csv file
+    """
+    
+    # open_smile_conf_path = "filrouge/OpenSmile_config/eGeMAPSv01b_modif.conf"
+    open_smile_conf_path = "Documents/lib/opensmile/config/egemaps/v01b/eGeMAPSv01b_modif.conf"
+    feature_name = "eGeMAPS"
+    extract_features(wav_filepath, open_smile_conf_path, feature_name)
+    
+    filename_output = wav_filepath + "." + feature_name + ".csv"
+    df = pd.read_csv(filename_output, delimiter=';')
+    df = df.drop(df.columns[0],axis=1)
+    for col in df.columns[2:]:
+        df = concatenate_spread_1_and_2(df, col)
+    df.to_csv(filename_output, sep=';')
+    print(filename_output)
+    return filename_output
+
 def write_audio_annotations(features_filename_path_list, filename_annotations, agreg_annotators):
     """ Add video annotations to the features file
 
@@ -140,7 +173,7 @@ def write_audio_annotations(features_filename_path_list, filename_annotations, a
 
     for features_filename_path, video_filename in zip(features_filename_path_list,video_filenames_list):
         df_features = pd.read_csv(features_filename_path, delimiter=';')
-        df_features_annoted = add_video_annotations(df_features, filename_annotations, 1, video_filename, agreg_annotators)
+        df_features_annoted = add_video_annotations(df_features, filename_annotations, 2, video_filename, agreg_annotators)
         print(video_filename, df_features_annoted.shape)
         if df_features_annoted.shape[0] > 0:
             features_filename_path = features_filename_path[:-4] + '.annotated.csv'
@@ -196,7 +229,8 @@ def preprocess_videos(directory_path, filename_annotations, agreg_annotators):
 if __name__ == '__main__':
     
     # arguments initialisation
-    directory_path = '../04 - Dev/videos'
+    # directory_path = '../04_-_Dev/videos'
+    directory_path = '/home/neo/Documents/Telecom Paris/INF780 - Projet fil rouge/04_-_Dev/videos'
     filename_annotations = 'Videos_Annotations - Template.csv'
     filename_annotations = 'https://docs.google.com/spreadsheets/d/1Rqu1sJiD-ogc4a6R491JTiaYacptOTqh6DKqhwTa8NA/gviz/tq?tqx=out:csv&sheet=Template'
     agreg_annotators = 'max'
@@ -204,9 +238,16 @@ if __name__ == '__main__':
     # launching the audio features extractions
      #preprocess_videos(directory_path, filename_annotations, agreg_annotators)
 
+    #extract features
+    # currentDirectory = pathlib.Path(directory_path)
+    # currentPattern = "*.wav"
+    # wav_filename_path_list = [str(currentFile) for currentFile in currentDirectory.glob(currentPattern)]
+    # print(wav_filename_path_list)
+    # [extract_features_eGeMAPS(wav_filename_path) for wav_filename_path in wav_filename_path_list]
+
     # write annotations
     currentDirectory = pathlib.Path(directory_path)
-    currentPattern = "*.emobase.csv"
+    currentPattern = "*.eGeMAPS.csv" #"*.emobase.csv"
     features_filename_path_list = [str(currentFile) for currentFile in currentDirectory.glob(currentPattern)]
     print(features_filename_path_list)
     write_audio_annotations(features_filename_path_list, filename_annotations, agreg_annotators)
