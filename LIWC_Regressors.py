@@ -1,27 +1,32 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
 import os
 import pandas as pd
 import numpy as np
-import spacy
 from annotations import get_annotations_video
-from sklearn.feature_extraction.text import CountVectorizer,TfidfTransformer
+from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import Ridge
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import LinearSVR
 from sklearn.model_selection import LeaveOneGroupOut
 
+filename_category = "/Users/Alex/Cours_Telecom/INFMDI 780/LIWC/LIWC_Category.csv"
+filename_mapping = "/Users/Alex/Cours_Telecom/INFMDI 780/LIWC/LIWC_Mapping.csv"
+
 folder_Code = '/Users/Alex/Cours_Telecom/INFMDI 780/Code/filrouge/'
 folder_Data = '/Users/Alex/Cours_Telecom/INFMDI 780/Data/'
 folder_transcript = f'{folder_Data}/Texts_test_man/'
 
-filename_annotations ='https://docs.google.com/\
-spreadsheets/d/1Rqu1sJiD-ogc4a6R491JTiaYacptOTqh6DKqhwTa8NA/gviz/tq?tqx=out:csv&sheet=Template'
+filename_annotations ='https://docs.google.com/spreadsheets/d/1Rqu1sJiD-ogc4a6R491JTiaYacptOTqh6DKqhwTa8NA/gviz/tq?tqx=out:csv&sheet=Template'
 file_sw = 'french_stop_words.txt'
+
 
 #Retrieve labels
 df_annotations = pd.read_csv(filename_annotations,  header=None).drop([0, 1, 2, 3])
+
+df_category = pd.read_csv(filename_category,header=None)
+df_mapping = pd.read_csv(filename_mapping,header=None)
+df_mapping.set_index(keys=0,inplace=True)
 
 video_names = set(df_annotations[1].values)
 
@@ -53,42 +58,35 @@ for i in range(len(text_files)):
         transcript = file.read()
         transcripts.append(transcript)
 
-#Lemmatization
-nlp = spacy.load('fr_core_news_md')
+#Creating LIWC_matrix
 
-transcript_lem_list = []
+dict_list=[]
 
-for trans in transcripts:
+for transcript in transcripts:
     
-    trans_lem = []
+    dict_LIWC={i:0 for i in range(1,465)}
     
-    doc = nlp(trans)
+    words = transcript.split()
     
-    for token in doc:
-        trans_lem.append(token.lemma_)
+    for word in words:
         
-    trans_join = " ".join(trans_lem)
-    transcript_lem_list.append(trans_join)
+        if word in df_mapping.index.values:
+            categories = df_mapping.loc[word].dropna()
+            
+            for cat in categories:
+                dict_LIWC[cat]+=1
+                
+    dict_list.append(dict_LIWC)
     
-#Loading French stop words
-os.chdir(folder_Code)
+LIWC_matrix = pd.DataFrame(dict_list)
 
-input_file = open(file_sw)
+#Keeping only most frequent categories (>1%)
+total = LIWC_matrix.sum().sum()
+pc_cat = LIWC_matrix.sum(axis=0)/total
+#Keeping categories>1% of occurence
+pc_cat_red = pc_cat[pc_cat>0.01]
 
-sw_list = []
-
-for word in input_file:
-    sw_list.append(word[:-1])
-    
-#Vectorization of the transcripts
-vectorizer = CountVectorizer(stop_words=sw_list)
-
-X_vect = vectorizer.fit_transform(transcript_lem_list)
-
-#TF IDF
-tfidf = TfidfTransformer()
-
-X_tfidf = tfidf.fit_transform(X_vect)
+LIWC_matrix = LIWC_matrix[pc_cat_red.index]
 
 #Regressors
 Ridge = Ridge(alpha=10)
@@ -99,11 +97,9 @@ SVR = LinearSVR(C=0.5)
 LOGO = LeaveOneGroupOut()
 groups = df_labels.Group.values
 
-X_cv = X_tfidf.toarray()
-
-
-#np_gender = df_labels['Gender'].to_numpy().reshape(-1,1)
-#X_cv_gender = np.concatenate((X_cv,np_gender),axis=1)
+#Normalising the data
+scaler = StandardScaler()
+X_cv = scaler.fit_transform(LIWC_matrix)
 
 y_cv = df_labels['Label'].values
 
@@ -137,4 +133,3 @@ for train_index, test_index in LOGO.split(X_cv,y_cv,groups):
 print(f'Ridge: {round(np.mean(RMSE_list_Rid),4)}')
 print(f'RF: {round(np.mean(RMSE_list_RF),4)}')
 print(f'SVR: {round(np.mean(RMSE_list_SVR),4)}')
-
