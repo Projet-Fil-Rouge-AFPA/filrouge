@@ -173,7 +173,7 @@ def write_audio_annotations(features_filename_path_list, filename_annotations, a
 
     for features_filename_path, video_filename in zip(features_filename_path_list,video_filenames_list):
         df_features = pd.read_csv(features_filename_path, delimiter=';')
-        df_features_annoted = add_video_annotations(df_features, filename_annotations, 2, video_filename, agreg_annotators)
+        df_features_annoted = add_video_annotations(df_features, filename_annotations, 1, video_filename, agreg_annotators)
         print(video_filename, df_features_annoted.shape)
         if df_features_annoted.shape[0] > 0:
             features_filename_path = features_filename_path[:-4] + '.annotated.csv'
@@ -247,7 +247,7 @@ if __name__ == '__main__':
 
     # write annotations
     currentDirectory = pathlib.Path(directory_path)
-    currentPattern = "*.eGeMAPS.csv" #"*.emobase.csv"
+    currentPattern = "*.emobase.csv" #"*.emobase.csv"
     features_filename_path_list = [str(currentFile) for currentFile in currentDirectory.glob(currentPattern)]
     print(features_filename_path_list)
     write_audio_annotations(features_filename_path_list, filename_annotations, agreg_annotators)
