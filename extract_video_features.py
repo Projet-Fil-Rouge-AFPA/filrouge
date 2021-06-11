@@ -130,6 +130,75 @@ def add_frameTimeWindow(df):
 
     return df 
 
+def concatenate_spread_1_and_2(df, col, suffix='_de', lag = 1):
+    """
+    Take a dataframe and a column and add to the dataframe two new columns given by 
+    ther first derivative of the column and the second derivative of the column
+    Parameters
+    ----------
+    df: Dataframe
+    Name of the dataframe
+
+    col: Column
+    Name of the column
+    """
+    df[col + suffix] = abs(df[col] - df[col].shift(lag))
+    df[col + suffix + suffix] = abs(df[col + suffix] - df[col + suffix].shift(lag))
+    return df
+
+
+def add_derivatives_drop_spatial(df):
+    """
+    Take a dataframe and add the drivative (first and second) of the column AU_r and 
+    the derivatives (first and second) of the spatial 
+    columns, it drops the original spatial columns
+    
+    Parameters
+    ----------
+    df: Dataframe
+    Name of the dataframe
+    """
+    AU_r = [i for i in  df.columns if i.endswith("r")]
+    
+    spatial_features = ['gaze_0_x', 'gaze_0_y', 'gaze_0_z', 'gaze_1_x', 'gaze_1_y', 'gaze_1_z',
+       'gaze_angle_x', 'gaze_angle_y', 'pose_Tx', 'pose_Ty', 'pose_Tz',
+       'pose_Rx', 'pose_Ry', 'pose_Rz']
+    for i in AU_r:
+        df = concatenate_spread_1_and_2(df, i) 
+    for i in spatial_features:
+        df = concatenate_spread_1_and_2(df, i) 
+    df = df.drop(spatial_features, axis = 1)    
+    df = df.dropna()    
+    return df      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#####FROM HERE ON OLD CALCULATION OF DISTANCES
+
+
 def create_df_difference_timestamp(df):    
     """
     Take a dataframe which has the column 'diapo' and add a column 'duration'. 
