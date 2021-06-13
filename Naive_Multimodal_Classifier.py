@@ -11,10 +11,14 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import LeaveOneGroupOut
 
+#video_file = 'https://drive.google.com/drive/folders/1RQCPBOhs7LQokxrioaw0c1fG-mQMLOKt'
+#audio_file = 'https://drive.google.com/drive/folders/1SL719K9cKXB4C0mpucy2mc_lwZMSihVn'
+#text_file = 'https://drive.google.com/drive/folders/1BREEwBkjulmjpfKQefhx9DiO3jMXBR8s'
+
 folder_Features = '/Users/Alex/Cours_Telecom/INFMDI 780/Data/Features'
-video_file =f'{folder_Features}/video_features'
-audio_file =f'{folder_Features}/audio_emobase_data_X_audio.p'
-text_file =f'{folder_Features}/text_features'
+video_file = f'{folder_Features}/video_features.p'
+audio_file = f'{folder_Features}/audio_emobase_data_X_audio.p'
+text_file = f'{folder_Features}/text_features'
 
 filename_annotations ='https://docs.google.com/\
 spreadsheets/d/1Rqu1sJiD-ogc4a6R491JTiaYacptOTqh6DKqhwTa8NA/gviz/tq?tqx=out:csv&sheet=Template'
@@ -25,7 +29,9 @@ audio_feat = pd.read_pickle(audio_file)
 text_feat = pd.read_pickle(text_file)
 
 multi_feat = pd.concat([video_feat,audio_feat,text_feat],axis=1)
-multi_feat = multi_feat.fillna(0)
+
+#videos_excluded = ['WIN_20210329_14_13_45_Pro','WIN_20210402_14_27_50_Pro']
+#multi_feat = multi_feat.drop(videos_excluded,axis=0)
 
 #Retrieve labels
 df_annotations = pd.read_csv(filename_annotations,  header=None).drop([0, 1, 2, 3])
@@ -50,14 +56,14 @@ for video_name in video_names:
 
 df_labels = pd.DataFrame.from_dict(dict,orient='index')
 df_labels = df_labels.stack()
+#df_labels = df_labels.drop(videos_excluded,axis=0)
 
 #Merge multi_feeatures and labels
 data = pd.concat([multi_feat,df_labels],axis=1)
 data = data.fillna(0)
 
-
-#Classifiers
-clf_RF = RandomForestClassifier(criterion='gini',max_features='log2',random_state=42)
+#Classifier
+clf_RF = RandomForestClassifier(criterion='entropy',random_state=42)
 
 #Leave-One-Interviewer-Out cross-validation
 LOGO = LeaveOneGroupOut()
