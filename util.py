@@ -36,6 +36,7 @@ def runGridSearchClassifiers(X, y, cv, models_list, parameters_list, output_pred
     
 
     from sklearn.model_selection import cross_val_predict, GridSearchCV
+    from sklearn.metrics import f1_score, accuracy_score
     import types
     import warnings
     warnings.filterwarnings("ignore")
@@ -98,7 +99,10 @@ def runGridSearchClassifiers(X, y, cv, models_list, parameters_list, output_pred
     
     if output_predict:
         y_predict = cross_val_predict(best_result['best_estimator'],X_no_name,y_no_name,cv=cv)
+        y_predict_proba = cross_val_predict(best_result['best_estimator'],X_no_name,y_no_name,cv=cv, method='predict_proba')
+        print('f1_score (weighted)',f1_score(y,y_predict, average='weighted'))
+        print('accuracy',accuracy_score(y,y_predict))
     else:
         y_predict = None
 
-    return best_result,  y_predict, result_list
+    return best_result,  y_predict, y_predict_proba, result_list
