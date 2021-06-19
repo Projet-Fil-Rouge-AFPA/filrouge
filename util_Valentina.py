@@ -99,7 +99,7 @@ def runGridSearchClassifiers(X, y, cv, models_list, parameters_list, output_pred
     
     if output_predict:
         y_predict = cross_val_predict(best_result['best_estimator'],X_no_name,y_no_name,cv=cv)
-        y_predict_proba = cross_val_predict(best_result['best_estimator'],X_no_name,y_no_name,cv=cv, method='predict_proba')
+        y_predict_proba = ''
         print('f1_score (weighted)',f1_score(y,y_predict, average='weighted'))
         print('accuracy',accuracy_score(y,y_predict))
     else:
